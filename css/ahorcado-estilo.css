@@ -1,6 +1,4 @@
 /*No es responsive, si la palabra a adivinar es grande, todo se verà de acuerdo a su longitud. Evitar palabras largas.*/
-@import url(http://fonts.googleapis.com/css?family=Dosis:300,400,500,600,700);
-
 body {
     font-family: 'Rubik Mono One', sans-serif;
     background: #ffd100;
