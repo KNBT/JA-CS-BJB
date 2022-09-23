@@ -16,18 +16,17 @@ var hangman = [
 ];
 
 //Letras  (teclado en pantalla)
-const letras = "abcdefghijklmnñopqrstuvwxyz";
-const letras_array = Array.from(letras);
-let letras_container = document.querySelector(".letras");
+const letras = [...'abcdefghijklmnñopqrstuvwxyz']; // Desestructuración de un string para hacer un array.
+let letrasContainer = document.querySelector(".letras");
 
 //Generar letras en HTML
-letras_array.forEach(letra => {
+letras.forEach(letra => {
   let span = document.createElement("span");
   let spanText = document.createTextNode(letra);
   span.appendChild(spanText);
   span.className = "letter-box";
 
-  letras_container.appendChild(span);
+  letrasContainer.appendChild(span);
 });
 
 //Palabras a usarse en el juego, la lógica del juego no permite elementos como frases, netamente PALABRAS.
@@ -37,75 +36,75 @@ const palabras = {
   Personas: ["Einstein", "Lejeune", "Lemaitre", "Jesucristo", "Ghandi", "Tolkien", "Chesterton", "Newton", "Copernico", "Ockham"],
   Paises: ["Algeria", "Siria", "Palestina", "Yemen", "Egipto", "Oman", "Qatar", "Peru", "Polonia", "Portugal", "Italia"]
 }
-let array_categorias = Object.keys(palabras); //obtiene los valores: Programación", "Películas", "Personas", "Paises, en array.
+let arrayCategorias = Object.keys(palabras); //obtiene los valores: Programación", "Películas", "Personas", "Paises, en array.
 
 //Para obtener una llave/categoría random/aleatoria
-let posición_categoria_random = Math.floor(Math.random() * array_categorias.length), //con Math.floor se obtiene un ńumero entero, sino sale en decimales
-  nombre_categoria_random = array_categorias[posición_categoria_random],
-  array_palabras_categoria = palabras[nombre_categoria_random],
+let posiciónCategoriaRandom = Math.floor(Math.random() * arrayCategorias.length), //con Math.floor se obtiene un ńumero entero, sino sale en decimales
+  nombreCategoriaRandom = arrayCategorias[posiciónCategoriaRandom],
+  arrayPalabrasCategoria = palabras[nombreCategoriaRandom],
   //Para obtener un valor random
-  posicion_palabra_random = Math.floor(Math.random() * array_palabras_categoria.length),
-  palabra_random = array_palabras_categoria[posicion_palabra_random];
+  posicionPalabraRandom = Math.floor(Math.random() * arrayPalabrasCategoria.length),
+  palabraRandom = arrayPalabrasCategoria[posicionPalabraRandom];
 
 //Muestra la categoría a la que pertenece la palabra
-document.querySelector(".row .pista span").innerHTML = nombre_categoria_random;
+document.querySelector(".row .pista span").innerHTML = nombreCategoriaRandom;
 
-let palabra_html = document.querySelector(".palabra");
-let array_letras_palabra = Array.from(palabra_random.toLowerCase()); //Array de las letras de la palabra a adivinar.
-array_letras_palabra.forEach((a) => { //por cada elemento del array
+let palabraHtml = document.querySelector(".palabra");
+let arrayLetrasPalabra = Array.from(palabraRandom.toLowerCase()); //Array de las letras de la palabra a adivinar.
+arrayLetrasPalabra.forEach((a) => { //por cada elemento del array
   let span = document.createElement("span"); //se crea un span
   if (a === " ") { //si el elemento es igual a un espacio en blanco
     span.className = "with-space"; //se agrega esta clase al elemento html que tiene cierto diseño en CSS
   }
-  palabra_html.appendChild(span);//añade un span por cada letra de la palabra
+  palabraHtml.appendChild(span);//añade un span por cada letra de la palabra
 });
 
 //Spans para las letras de la palabra a adivinar
-let span_palabra_html = document.querySelectorAll(".palabra span");
+let spanPalabraHtml = document.querySelectorAll(".palabra span");
 //Contar intentos incorrectos
-let intentos_incorrectos = 0;
+let intentosIncorrectos = 0;
 
 //Contar letras acertadad
-let letras_acertadas = 0;
+let letrasAcertadas = 0;
 
 //Manejo del juego haciendo clic en las letras
 document.addEventListener("click", (e) => {
-  let es_elegido = false; //estado de la letra de la palabra a adivinar, se debe mostrar o no
+  let esElegido = false; //estado de la letra de la palabra a adivinar, se debe mostrar o no
   if (e.target.className === "letter-box") {
     e.target.classList.add("clicked");
-    let letra_seleccionada = e.target.innerHTML.toLowerCase();
-    array_letras_palabra.forEach((letra_palabra, indice_letra) => {
-      if (letra_seleccionada == letra_palabra) {
-        letras_acertadas++;
-        es_elegido = true; //Si la letra es igual a alguna que está en la palabra, aparece.
-        span_palabra_html.forEach((span, indice_span) => {
-          if (indice_letra === indice_span) {
-            span.innerHTML = letra_palabra;
+    let letraSeleccionada = e.target.innerHTML.toLowerCase();
+    arrayLetrasPalabra.forEach((letraPalabra, indiceLetra) => {
+      if (letraSeleccionada == letraPalabra) {
+        letrasAcertadas++;
+        esElegido = true; //Si la letra es igual a alguna que está en la palabra, aparece.
+        spanPalabraHtml.forEach((span, indiceSpan) => {
+          if (indiceLetra === indiceSpan) {
+            span.innerHTML = letraPalabra;
           }
         });
       }
     })
-    if (letras_acertadas == array_letras_palabra.length) {
+    if (letrasAcertadas == arrayLetrasPalabra.length) {
       alert("¡Felicidades, GANASTE!. ¿DESEAS JUGAR NUEVAMENTE?");
       if (alert) {
         window.location.reload();
       }
     }
-    if (es_elegido !== true) {
-      intentos_incorrectos++;
+    if (esElegido !== true) {
+      intentosIncorrectos++;
       dibujarAhorcado();
-      if (intentos_incorrectos == hangman.length) {
-        letras_container.classList.add("finished");
+      if (intentosIncorrectos == hangman.length) {
+        letrasContainer.classList.add("finished");
         perdioPartida();
       }
     }
-    es_elegido = false;
+    esElegido = false;
   }
 });
 
 function perdioPartida() {
-  palabra_random = palabra_random.toUpperCase();
-  alert(`PERDISTE. La palabra era: "${palabra_random}". ¿DESEAS JUGAR NUEVAMENTE?`);
+  palabraRandom = palabraRandom.toUpperCase();
+  alert(`PERDISTE. La palabra era: "${palabraRandom}". ¿DESEAS JUGAR NUEVAMENTE?`);
   if (alert) {
     window.location.reload();
   }
@@ -117,9 +116,9 @@ let intentos = hangman.length;
 function dibujarAhorcado() {
   intentos--;
   let part = hangman[intentos];
-  let lineas_ahorcado = document.querySelector('.hangman').querySelectorAll('svg');
-  for (let i = 0; i < lineas_ahorcado.length; i++) {
-    lineas_ahorcado[i].children[0].classList.remove('draw');
+  let lineasAhorcado = document.querySelector('.hangman').querySelectorAll('svg');
+  for (let i = 0; i < lineasAhorcado.length; i++) {
+    lineasAhorcado[i].children[0].classList.remove('draw');
   }
   let svg;
   if (part.circle == undefined) {
