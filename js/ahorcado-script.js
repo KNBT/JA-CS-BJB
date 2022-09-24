@@ -2,7 +2,7 @@
 "use strict";
 
 //Para el dibujo del ahorcado:
-var hangman = [
+const HANGMAN = [
   { from: [70, 38], to: [72, 46] },
   { from: [70, 38], to: [68, 46] },
   { from: [70, 45], to: [72, 55] },
@@ -93,8 +93,8 @@ document.addEventListener("click", (e) => {
     if (esElegido !== true) {
       intentosIncorrectos++;
       dibujarAhorcado();
-      if (intentosIncorrectos == hangman.length) {
-        letrasContainer.classList.add("finished");
+      if (intentos_incorrectos == HANGMAN.length) {
+        letras_container.classList.add("finished");
         perdioPartida();
       }
     }
@@ -111,14 +111,14 @@ function perdioPartida() {
 }
 
 //Intentos, con esto trabajará la función para dibujar al ahorcado
-let intentos = hangman.length;
+let intentos = HANGMAN.length;
 //Función para dibujar al ahorcado
 function dibujarAhorcado() {
   intentos--;
-  let part = hangman[intentos];
-  let lineasAhorcado = document.querySelector('.hangman').querySelectorAll('svg');
-  for (let i = 0; i < lineasAhorcado.length; i++) {
-    lineasAhorcado[i].children[0].classList.remove('draw');
+  let part = HANGMAN[intentos];
+  let lineas_ahorcado = document.querySelector('.hangman').querySelectorAll('svg');
+  for (let i = 0; i < lineas_ahorcado.length; i++) {
+    lineas_ahorcado[i].children[0].classList.remove('draw');
   }
   let svg;
   if (part.circle == undefined) {
